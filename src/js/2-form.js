@@ -41,7 +41,7 @@ function sendData(event) {
 
 function inputData() {
     const gotData = loadFromLS(KEY) || {};
-    form.elements.email.value = gotData.email || "@";
+    form.elements.email.value = gotData.email || "";
     form.elements.message.value = gotData.message || "";
 }
 

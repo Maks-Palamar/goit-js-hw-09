@@ -3,9 +3,12 @@ const KEY = "feedback-form-state";
 const form = document.querySelector('.feedback-form');
 form.addEventListener("input", inputListenFunc);
 
+/*const mailInput = form.elements.email;
+mailInput.setAttribute('required', true);*/
+
 function inputListenFunc(event) {
-    const email = form.elements.email.value;
-    const message = form.elements.message.value;
+    const email = form.elements.email.value.trim();
+    const message = form.elements.message.value.trim();
 
     const userData = {
         email: email,
@@ -21,10 +24,11 @@ function saveToLS(key, value) {
 }
 
 function loadFromLS(key = 'mustbeakey') {
-    const gotKey = localStorage.getItem(key);
+  const gotKey = localStorage.getItem(key);
+    
     try {
-      const result = JSON.parse(gotKey);
-      return result;
+      const result = JSON.parse(gotKey) || {};
+      return result || {};
     } catch {
       return gotKey;
     }
@@ -33,16 +37,25 @@ function loadFromLS(key = 'mustbeakey') {
 form.addEventListener("submit", sendData);
 
 function sendData(event) {
-    event.preventDefault();
-    loadFromLS(KEY);
+  event.preventDefault();
+  
+  if (form.elements.email.value !== "" && form.elements.message.value !== "") {
+    const userData = loadFromLS(KEY);
+    console.log('User Data:', userData);
     localStorage.removeItem(KEY);
     form.reset();
+  } else {
+    console.log("All fields must be filled!");
+  }
+    
 }
 
 function inputData() {
-    const gotData = loadFromLS(KEY) || {};
+    const gotData = loadFromLS(KEY) || "";
     form.elements.email.value = gotData.email || "";
-    form.elements.message.value = gotData.message || "";
+  form.elements.message.value = gotData.message || "";
+  console.log('Data loaded to form:', gotData);
+    
 }
 
 inputData();
